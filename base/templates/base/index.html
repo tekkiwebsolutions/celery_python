@@ -1,0 +1,60 @@
+
+
+<div name="main">
+    <p>Your task is started. Please wait</p>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+    console.log(window.location.host)
+    var taskWebSocket = new WebSocket(`ws://${window.location.host}/ws/task_status/{{task_id}}/`);
+
+    taskWebSocket.onopen = function() {
+        console.log("Connection established");
+    };
+
+    taskWebSocket.onmessage = function (evt) { 
+        var data = JSON.parse(evt.data);
+        console.log(data.status);
+        if (data.status == 'SUCCESS') {
+            document.querySelector('div[name=main]').innerHTML = `
+                <p>Your task is completed</p>
+                <p>It is completed in seconds</p>
+            `;
+            taskWebSocket.close();
+        }
+    };
+
+            // var fastWebSocket = new WebSocket(`ws://${window.location.host}/fastapi/fast-ws/{{task_id}}/`);
+
+            // fastWebSocket.onopen = function() {
+            //     console.log("Connection established FAST");
+            // };
+
+            // fastWebSocket.onmessage = (evt)=> {
+            //     console.log('hehehe');
+            //     console.log(evt.data);
+            // };
+
+
+    // var checkStatuInterval = setInterval(function () {
+    //     $.ajax({
+    //     url: '/check_task_status?task_id={{task_id}}',
+    //     method: 'GET',
+    //     success: function (response) {
+    //         console.log('JRJRJRJRJRRJR')
+    //         console.log(response);
+    //         if (response.status == 'SUCCESS') {
+    //             console.log( document.querySelector('div[name=main]'))
+    //             document.querySelector('div[name=main]').innerHTML = `
+    //                 <p>Your task is completed</p>
+    //                 <p>It is completed in seconds</p>
+    //             `;
+    //             clearInterval(checkStatuInterval);
+    //         }
+    //     }
+    // });
+    // }, 3000);
+    
+</script>

@@ -3,3 +3,9 @@ celery
 django
 redis
 django-celery-beat
+fastapi
+uvicorn[standard]
+daphne
+channels
+websockets
+channels-redis
