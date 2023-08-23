@@ -23,6 +23,5 @@ class TaskStatusConsumer(AsyncWebsocketConsumer):
 
     async def custom_message(self, event):
         message = event['message']
-        print('$$$$$$$$$$$$')
         await self.send(text_data=message)
         print('message', message)

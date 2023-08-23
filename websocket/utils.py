@@ -6,15 +6,11 @@ from channels.layers import get_channel_layer
 from fastapi import WebSocket
 
 async def send_message_to_websocket(channel_name: str, message: dict):
-    print(f"==>> channel_name: {channel_name}")
-    print('RRRRRRRRR')
     channel_layer = get_channel_layer()
-    print(type(channel_layer))
     await channel_layer.group_send(channel_name, {
             "type": "custom_message",
-            "message": json.dumps({'status': 'PENDINGGGGG'})})
+            "message": json.dumps(message)})
     
-
 
 @sync_to_async
 def get_task_state(task_id):
@@ -32,12 +28,11 @@ async def get_task_result(task_id, channel):
     while await get_task_state(task_id) == 'PENDING':
         print(1)
         await async_sleep(1)
-        print(f"==>> chanel_name: {channel}")
         if isinstance(channel, WebSocket):
-            await channel.send_text(json.dumps({'status': 'Fast'}))
+            await channel.send_text(json.dumps({'status': 'pending from fastapi'}))
         else:
             await send_message_to_websocket(
-                task_id, {'status': 'PENDINGGGGG'})
+                task_id, {'status': 'PENDING'})
     task = await get_task_details(task_id)
     print(task['state']*50)
     if isinstance(channel, WebSocket):
@@ -45,8 +40,4 @@ async def get_task_result(task_id, channel):
             {'status': task['state'], 'result': task['result']}))
     else:
         await send_message_to_websocket(
-            task_id, {'status': task['state'], 'result': task['result']})
-    # yield
-    # await self.send(text_data=json.dumps(
-    #     {'status': task['state'], 'result': task['result']}
-    # ))
+            task_id, {'status': "SUCESS from fastapi", 'result': task['result'],})
